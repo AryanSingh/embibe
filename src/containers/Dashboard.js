@@ -291,6 +291,21 @@ class Dashboard extends React.Component {
                         )}
                       </Button>
                     </Grid>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          this.setState({
+                            marksFilter: 0,
+                            alphabeticalFilter: 0,
+                            searchStr: '',
+                          })
+                        }
+                      >
+                        Clear Filters
+                      </Button>
+                    </Grid>
                   </Grid>
                 </div>
               </Toolbar>
