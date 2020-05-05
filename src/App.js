@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import Dashboard from './containers/Dashboard';
 import Signup from './containers/Signup';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
 
 function App() {
@@ -11,13 +12,19 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/">
-            <Dashboard />
+            <ErrorBoundary>
+              <Dashboard />
+            </ErrorBoundary>
           </Route>
           <Route path="/signup">
-            <Signup />
+            <ErrorBoundary>
+              <Signup />
+            </ErrorBoundary>
           </Route>
           <Route path="/dashboard">
-            <Dashboard />
+            <ErrorBoundary>
+              <Dashboard />
+            </ErrorBoundary>
           </Route>
         </Switch>
       </Router>

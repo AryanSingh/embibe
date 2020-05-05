@@ -4,7 +4,6 @@ import { getData } from '../actions';
 import StudentCard from '../components/StudentCard';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
-import CameraIcon from '@material-ui/icons/PhotoCamera';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -17,17 +16,9 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import { studentsTotalSelector } from '../selectors';
 
 function Copyright() {
   return (
@@ -140,6 +131,10 @@ const styles = (theme) => ({
       display: 'none',
     },
   },
+
+  MuiCardActionsRoot: {
+    justifyContent: 'center',
+  },
 });
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -231,17 +226,12 @@ class Dashboard extends React.Component {
                         <Typography gutterBottom variant="h5" component="h2">
                           {student.name}
                         </Typography>
-                        <Typography>
-                          This is a media card. You can use this section to
-                          describe the content.
-                        </Typography>
+                        <Typography>id: {student.student_id}</Typography>
+                        <Typography>Total Marks: {student.total}</Typography>
                       </CardContent>
-                      <CardActions>
+                      <CardActions className={classes.MuiCardActionsRoot}>
                         <Button size="small" color="primary">
                           View
-                        </Button>
-                        <Button size="small" color="primary">
-                          Edit
                         </Button>
                       </CardActions>
                     </Card>
@@ -273,7 +263,7 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data,
+    data: studentsTotalSelector(state),
   };
 };
 
