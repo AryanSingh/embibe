@@ -12,6 +12,7 @@ import { fade } from '@material-ui/core/styles';
 import { studentsTotalSelector } from '../selectors';
 import { withRouter } from 'react-router';
 import { Bar } from 'react-chartjs-2';
+import { Link as NavigationLink } from 'react-router-dom';
 
 function Copyright() {
   return (
@@ -140,6 +141,7 @@ const styles = (theme) => ({
   MuiCardActionsRoot: {
     justifyContent: 'center',
   },
+  backText: {},
 });
 
 class StudentProfile extends React.Component {
@@ -198,6 +200,22 @@ class StudentProfile extends React.Component {
         <CssBaseline />
         <AppBar position="static">
           <Toolbar className={classes.MuiToolbarRoot}>
+            <NavigationLink
+              to="/dashboard"
+              style={{
+                color: '#FFFFFF',
+                alignSelf: 'center',
+                cursor: 'pointer',
+                left: 0,
+                position: 'absolute',
+                marginLeft: '8px',
+                textDecoration: 'none',
+              }}
+            >
+              <Typography variant="h6" className={classes.backText}>
+                Back
+              </Typography>
+            </NavigationLink>
             <Typography variant="h6" className={classes.title}>
               {this.state.student.name || 'Student'}
             </Typography>
@@ -226,20 +244,20 @@ class StudentProfile extends React.Component {
           </div>
         </main>
         {/* Footer */}
-        <footer className={classes.footer}>
-          <Typography variant="h6" align="center" gutterBottom>
-            Footer
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            color="textSecondary"
-            component="p"
-          >
-            Something here to give the footer a purpose!
-          </Typography>
-          <Copyright />
-        </footer>
+        {/*<footer className={classes.footer}>*/}
+        {/*<Typography variant="h6" align="center" gutterBottom>*/}
+        {/*Footer*/}
+        {/*</Typography>*/}
+        {/*<Typography*/}
+        {/*variant="subtitle1"*/}
+        {/*align="center"*/}
+        {/*color="textSecondary"*/}
+        {/*component="p"*/}
+        {/*>*/}
+        {/*Something here to give the footer a purpose!*/}
+        {/*</Typography>*/}
+        {/*<Copyright />*/}
+        {/*</footer>*/}
         {/* End footer */}
       </React.Fragment>
     );

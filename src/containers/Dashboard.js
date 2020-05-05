@@ -21,6 +21,8 @@ import { fade } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { studentsTotalSelector } from '../selectors';
+import { withRouter } from 'react-router';
+
 import debounce from 'lodash/debounce';
 
 function Copyright() {
@@ -315,7 +317,13 @@ class Dashboard extends React.Component {
                         <Typography>Total Marks: {student.total}</Typography>
                       </CardContent>
                       <CardActions className={classes.MuiCardActionsRoot}>
-                        <Button size="small" color="primary">
+                        <Button
+                          size="small"
+                          color="primary"
+                          onClick={() =>
+                            this.props.history.push(`/${student.student_id}`)
+                          }
+                        >
                           View
                         </Button>
                       </CardActions>
@@ -358,4 +366,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Dashboard));
+)(withStyles(styles)(withRouter(Dashboard)));
