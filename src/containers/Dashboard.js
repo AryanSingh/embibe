@@ -6,6 +6,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,6 +21,7 @@ import { fade } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { studentsTotalSelector } from '../selectors';
+import debounce from 'lodash/debounce';
 
 function Copyright() {
   return (
@@ -87,9 +90,6 @@ const styles = (theme) => ({
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    // marginRight: theme.spacing(2),
-    // marginLeft: 0,
-    // margin: 'auto',
     alignSelf: 'center',
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -137,36 +137,95 @@ const styles = (theme) => ({
   },
 });
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 class Dashboard extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      data: [],
+      searchStr: '',
+      marksFilter: 0,
+      alphabeticalFilter: 0,
+    };
   }
 
   componentDidMount() {
     this.props.getData();
-    console.log('props', this.props);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.data !== this.props.data) {
-      console.log('data', this.props.data);
+      this.setState({ data: this.props.data });
+    }
+    if (prevState.searchStr !== this.state.searchStr) {
+      // this.nameFilter()
+    }
+    if (
+      prevState.marksFilter !== this.state.marksFilter ||
+      prevState.alphabeticalFilter !== this.state.alphabeticalFilter
+    ) {
+      this.orderFilter();
     }
   }
 
-  renderStudents = (students) => {
-    if (students) {
-      console.log('students', students);
-      return students.map((student) => {
-        return <StudentCard student={student} id={student.student_id} />;
-      });
+  nameFilter = () => {
+    if (this.state.searchStr === '') {
+      this.orderFilter(this.state.data);
+    } else if (this.state.searchStr !== '') {
+      let tempArr = this.props.data.filter((item) =>
+        new RegExp(this.state.searchStr, 'g').test(item.name)
+      );
+      this.setState({ data: tempArr }, () => this.orderFilter());
+    }
+  };
+
+  orderFilter = () => {
+    let tempArr = [];
+    if (this.state.marksFilter === 1) {
+      tempArr = this.state.data.sort((a, b) => a.total - b.total);
+      this.setState({ data: tempArr });
+    } else if (this.state.marksFilter === -1) {
+      tempArr = this.state.data.sort((a, b) => b.total - a.total);
+      this.setState({ data: tempArr });
+    } else if (this.state.alphabeticalFilter === 1) {
+      tempArr = this.state.data.sort((a, b) => a.student_id - b.student_id);
+      this.setState({ data: tempArr });
+    } else if (this.state.alphabeticalFilter === -1) {
+      tempArr = this.state.data.sort((a, b) => b.student_id - a.student_id);
+      this.setState({ data: tempArr });
+    }
+    console.log('tempArr', tempArr);
+  };
+
+  toggleAlphabet = () => {
+    console.log('toggling alphabet');
+    if (this.state.alphabeticalFilter === 0) {
+      this.setState({ alphabeticalFilter: -1, marksFilter: 0 });
+    } else {
+      this.setState(
+        {
+          alphabeticalFilter: -1 * this.state.alphabeticalFilter,
+          marksFilter: 0,
+        },
+        () => console.log(this.state)
+      );
+    }
+  };
+
+  toggleMarks = () => {
+    console.log('toggling marks');
+    if (this.state.marksFilter === 0) {
+      this.setState({ marksFilter: 1, alphabeticalFilter: 0 });
+    } else {
+      this.setState(
+        { marksFilter: -1 * this.state.marksFilter, alphabeticalFilter: 0 },
+        () => console.log(this.state)
+      );
     }
   };
 
   render() {
     const { classes } = this.props;
+    const debouncedNameFilter = debounce(this.nameFilter, 300);
 
     // return <div>{this.renderStudents(this.props.data)}</div>;
 
@@ -185,6 +244,12 @@ class Dashboard extends React.Component {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+                value={this.state.searchStr}
+                onChange={(event) =>
+                  this.setState({ searchStr: event.target.value }, () =>
+                    debouncedNameFilter()
+                  )
+                }
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
@@ -192,13 +257,33 @@ class Dashboard extends React.Component {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary">
-                    Main call to action
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => this.toggleAlphabet()}
+                  >
+                    Order Alphabetically{' '}
+                    {this.state.alphabeticalFilter === 1 && (
+                      <ArrowUpwardIcon fontSize="small" />
+                    )}
+                    {this.state.alphabeticalFilter === -1 && (
+                      <ArrowDownwardIcon fontSize="small" />
+                    )}
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="contained" color="primary">
-                    Secondary action
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => this.toggleMarks()}
+                  >
+                    Order by Marks{' '}
+                    {this.state.marksFilter === 1 && (
+                      <ArrowUpwardIcon fontSize="small" />
+                    )}
+                    {this.state.marksFilter === -1 && (
+                      <ArrowDownwardIcon fontSize="small" />
+                    )}
                   </Button>
                 </Grid>
               </Grid>
@@ -213,8 +298,8 @@ class Dashboard extends React.Component {
           <Container className={classes.cardGrid} maxWidth="md">
             {/* End hero unit */}
             <Grid container spacing={4}>
-              {this.props.data &&
-                this.props.data.map((student) => (
+              {this.state.data &&
+                this.state.data.map((student) => (
                   <Grid item key={student.student_id} xs={12} sm={6} md={4}>
                     <Card className={classes.card}>
                       <CardMedia
@@ -274,5 +359,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(withStyles(styles)(Dashboard));
-
-// export default withStyles(styles)(HigherOrderComponent);
