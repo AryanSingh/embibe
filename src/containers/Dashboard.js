@@ -22,6 +22,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { studentsTotalSelector } from '../selectors';
 import { withRouter } from 'react-router';
+var Loader = require('react-loader');
 
 import debounce from 'lodash/debounce';
 
@@ -233,122 +234,134 @@ class Dashboard extends React.Component {
 
     return (
       <React.Fragment>
-        <CssBaseline />
-        <AppBar position="static">
-          <Toolbar className={classes.MuiToolbarRoot}>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                value={this.state.searchStr}
-                onChange={(event) =>
-                  this.setState({ searchStr: event.target.value }, () =>
-                    debouncedNameFilter()
-                  )
-                }
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </div>
-            {/*<div className={classes.grow} />*/}
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => this.toggleAlphabet()}
-                  >
-                    Order Alphabetically{' '}
-                    {this.state.alphabeticalFilter === 1 && (
-                      <ArrowUpwardIcon fontSize="small" />
-                    )}
-                    {this.state.alphabeticalFilter === -1 && (
-                      <ArrowDownwardIcon fontSize="small" />
-                    )}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => this.toggleMarks()}
-                  >
-                    Order by Marks{' '}
-                    {this.state.marksFilter === 1 && (
-                      <ArrowUpwardIcon fontSize="small" />
-                    )}
-                    {this.state.marksFilter === -1 && (
-                      <ArrowDownwardIcon fontSize="small" />
-                    )}
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
-          </Toolbar>
-        </AppBar>
-        <main>
-          {/* Hero unit */}
-          <div className={classes.heroContent}>
-            <Container maxWidth="sm"></Container>
-          </div>
-          <Container className={classes.cardGrid} maxWidth="md">
-            {/* End hero unit */}
-            <Grid container spacing={4}>
-              {this.state.data &&
-                this.state.data.map((student) => (
-                  <Grid item key={student.student_id} xs={12} sm={6} md={4}>
-                    <Card className={classes.card}>
-                      <CardMedia
-                        className={classes.cardMedia}
-                        image="https://source.unsplash.com/random"
-                        title="Image title"
-                      />
-                      <CardContent className={classes.cardContent}>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          {student.name}
-                        </Typography>
-                        <Typography>id: {student.student_id}</Typography>
-                        <Typography>Total Marks: {student.total}</Typography>
-                      </CardContent>
-                      <CardActions className={classes.MuiCardActionsRoot}>
-                        <Button
-                          size="small"
-                          color="primary"
-                          onClick={() =>
-                            this.props.history.push(`/${student.student_id}`)
-                          }
-                        >
-                          View
-                        </Button>
-                      </CardActions>
-                    </Card>
+        <Loader loaded={this.state.data.length !== 0}>
+          <React.Fragment>
+            <CssBaseline />
+            <AppBar position="static">
+              <Toolbar className={classes.MuiToolbarRoot}>
+                <div className={classes.search}>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon />
+                  </div>
+                  <InputBase
+                    placeholder="Search…"
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    value={this.state.searchStr}
+                    onChange={(event) =>
+                      this.setState({ searchStr: event.target.value }, () =>
+                        debouncedNameFilter()
+                      )
+                    }
+                    inputProps={{ 'aria-label': 'search' }}
+                  />
+                </div>
+                {/*<div className={classes.grow} />*/}
+                <div className={classes.heroButtons}>
+                  <Grid container spacing={2} justify="center">
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => this.toggleAlphabet()}
+                      >
+                        Order Alphabetically{' '}
+                        {this.state.alphabeticalFilter === 1 && (
+                          <ArrowUpwardIcon fontSize="small" />
+                        )}
+                        {this.state.alphabeticalFilter === -1 && (
+                          <ArrowDownwardIcon fontSize="small" />
+                        )}
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => this.toggleMarks()}
+                      >
+                        Order by Marks{' '}
+                        {this.state.marksFilter === 1 && (
+                          <ArrowUpwardIcon fontSize="small" />
+                        )}
+                        {this.state.marksFilter === -1 && (
+                          <ArrowDownwardIcon fontSize="small" />
+                        )}
+                      </Button>
+                    </Grid>
                   </Grid>
-                ))}
-            </Grid>
-          </Container>
-        </main>
-        {/* Footer */}
-        <footer className={classes.footer}>
-          <Typography variant="h6" align="center" gutterBottom>
-            Footer
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            color="textSecondary"
-            component="p"
-          >
-            Something here to give the footer a purpose!
-          </Typography>
-          <Copyright />
-        </footer>
-        {/* End footer */}
+                </div>
+              </Toolbar>
+            </AppBar>
+            <main>
+              {/* Hero unit */}
+              <div className={classes.heroContent}>
+                <Container maxWidth="sm"></Container>
+              </div>
+              <Container className={classes.cardGrid} maxWidth="md">
+                {/* End hero unit */}
+                <Grid container spacing={4}>
+                  {this.state.data &&
+                    this.state.data.map((student) => (
+                      <Grid item key={student.student_id} xs={12} sm={6} md={4}>
+                        <Card className={classes.card}>
+                          <CardMedia
+                            className={classes.cardMedia}
+                            image="https://source.unsplash.com/random"
+                            title="Image title"
+                          />
+                          <CardContent className={classes.cardContent}>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                            >
+                              {student.name}
+                            </Typography>
+                            <Typography>id: {student.student_id}</Typography>
+                            <Typography>
+                              Total Marks: {student.total}
+                            </Typography>
+                          </CardContent>
+                          <CardActions className={classes.MuiCardActionsRoot}>
+                            <Button
+                              size="small"
+                              color="primary"
+                              onClick={() =>
+                                this.props.history.push(
+                                  `/${student.student_id}`
+                                )
+                              }
+                            >
+                              View
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    ))}
+                </Grid>
+              </Container>
+            </main>
+            {/* Footer */}
+            <footer className={classes.footer}>
+              <Typography variant="h6" align="center" gutterBottom>
+                Footer
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                align="center"
+                color="textSecondary"
+                component="p"
+              >
+                Something here to give the footer a purpose!
+              </Typography>
+              <Copyright />
+            </footer>
+            {/* End footer */}
+          </React.Fragment>
+        </Loader>
       </React.Fragment>
     );
   }

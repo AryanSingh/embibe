@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 // import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { withCookies, Cookies } from 'react-cookie';
+import { withRouter } from 'react-router';
 
 function Copyright() {
   return (
@@ -48,9 +50,25 @@ const styles = (theme) => ({
 });
 
 class SignUp extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
+  constructor(props) {
+    super(props);
+    const { cookies } = props;
+    this.state = {
+      name: cookies.get('name') || '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    };
+  }
+
+  handleNameChange(name) {
+    const { cookies } = this.props;
+    console.log(this.state);
+
+    cookies.set('name', name, { path: '/' });
+    this.setState({ name });
+    this.props.history.push('/dashboard');
   }
   render() {
     const { classes } = this.props;
@@ -75,6 +93,10 @@ class SignUp extends React.Component {
                   required
                   fullWidth
                   id="firstName"
+                  value={this.state.firstName}
+                  onChange={(event) =>
+                    this.setState({ firstName: event.target.value })
+                  }
                   label="First Name"
                   autoFocus
                 />
@@ -88,6 +110,10 @@ class SignUp extends React.Component {
                   label="Last Name"
                   name="lastName"
                   autoComplete="lname"
+                  value={this.state.lastName}
+                  onChange={(event) =>
+                    this.setState({ lastName: event.target.value })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -99,6 +125,10 @@ class SignUp extends React.Component {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={this.state.email}
+                  onChange={(event) =>
+                    this.setState({ email: event.target.value })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -111,6 +141,10 @@ class SignUp extends React.Component {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  value={this.state.password}
+                  onChange={(event) =>
+                    this.setState({ password: event.target.password })
+                  }
                 />
               </Grid>
             </Grid>
@@ -120,6 +154,11 @@ class SignUp extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={() => {
+                if (this.state.firstName) {
+                  this.handleNameChange(this.state.firstName);
+                }
+              }}
             >
               Sign Up
             </Button>
@@ -140,4 +179,4 @@ class SignUp extends React.Component {
   }
 }
 
-export default withStyles(styles)(SignUp);
+export default withStyles(styles)(withCookies(withRouter(SignUp)));

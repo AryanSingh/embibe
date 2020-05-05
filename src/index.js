@@ -9,6 +9,7 @@ import { logger } from 'redux-logger';
 import reducer from './reducers';
 import rootSaga from './sagas';
 import * as serviceWorker from './serviceWorker';
+import { CookiesProvider } from 'react-cookie';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -19,7 +20,9 @@ sagaMiddleware.run(rootSaga);
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <CookiesProvider>
+        <App />
+      </CookiesProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
