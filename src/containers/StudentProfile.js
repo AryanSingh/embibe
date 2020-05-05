@@ -33,7 +33,8 @@ const styles = (theme) => ({
   },
   heroContent: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
+    padding: theme.spacing(16, 0, 6),
+    marginTop: theme.spacing(8),
   },
   heroButtons: {
     marginLeft: theme.spacing(2),
@@ -142,6 +143,10 @@ const styles = (theme) => ({
     justifyContent: 'center',
   },
   backText: {},
+
+  NotFound: {
+    fontSize: '24px',
+  },
 });
 
 class StudentProfile extends React.Component {
@@ -178,7 +183,7 @@ class StudentProfile extends React.Component {
   render() {
     const { classes } = this.props;
     let data;
-    if (this.state.student.marks) {
+    if (this.state.student && this.state.student.marks) {
       data = {
         labels: Object.keys(this.state.student.marks),
         datasets: [
@@ -198,7 +203,7 @@ class StudentProfile extends React.Component {
     return (
       <React.Fragment>
         <CssBaseline />
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar className={classes.MuiToolbarRoot}>
             <NavigationLink
               to="/dashboard"
@@ -217,48 +222,42 @@ class StudentProfile extends React.Component {
               </Typography>
             </NavigationLink>
             <Typography variant="h6" className={classes.title}>
-              {this.state.student.name || 'Student'}
+              {(this.state.student && this.state.student.name) || 'Student'}
             </Typography>
           </Toolbar>
         </AppBar>
-        <main>
+        {!this.state.student ? (
           <div className={classes.heroContent}>
             <Container maxWidth="sm">
-              <Typography variant="p" className={classes.Id}>
-                Id: {this.state.student.student_id}
+              <Typography variant="p" className={classes.NotFound}>
+                Student Not found
               </Typography>
-              <Typography variant="p" className={classes.total}>
-                Total Marks: {this.state.student.total}
-              </Typography>
-            </Container>
-            <Container maxWidth="sm">
-              <Bar
-                data={data}
-                width={100}
-                height={250}
-                options={{
-                  maintainAspectRatio: false,
-                }}
-              />
             </Container>
           </div>
-        </main>
-        {/* Footer */}
-        {/*<footer className={classes.footer}>*/}
-        {/*<Typography variant="h6" align="center" gutterBottom>*/}
-        {/*Footer*/}
-        {/*</Typography>*/}
-        {/*<Typography*/}
-        {/*variant="subtitle1"*/}
-        {/*align="center"*/}
-        {/*color="textSecondary"*/}
-        {/*component="p"*/}
-        {/*>*/}
-        {/*Something here to give the footer a purpose!*/}
-        {/*</Typography>*/}
-        {/*<Copyright />*/}
-        {/*</footer>*/}
-        {/* End footer */}
+        ) : (
+          <main>
+            <div className={classes.heroContent}>
+              <Container maxWidth="sm">
+                <Typography variant="p" className={classes.Id}>
+                  Id: {this.state.student && this.state.student.student_id}
+                </Typography>
+                <Typography variant="p" className={classes.total}>
+                  Total Marks: {this.state.student && this.state.student.total}
+                </Typography>
+              </Container>
+              <Container maxWidth="sm">
+                <Bar
+                  data={data}
+                  width={100}
+                  height={250}
+                  options={{
+                    maintainAspectRatio: false,
+                  }}
+                />
+              </Container>
+            </div>
+          </main>
+        )}
       </React.Fragment>
     );
   }

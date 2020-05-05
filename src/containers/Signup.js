@@ -64,9 +64,15 @@ class SignUp extends React.Component {
 
   handleNameChange(name) {
     const { cookies } = this.props;
-    console.log(this.state);
 
-    cookies.set('name', name, { path: '/' });
+    cookies.set(
+      'login',
+      JSON.stringify({
+        email: this.state.email,
+        password: this.state.password,
+      }),
+      { path: '/' }
+    );
     this.setState({ name });
     this.props.history.push('/dashboard');
   }

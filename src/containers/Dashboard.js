@@ -196,11 +196,9 @@ class Dashboard extends React.Component {
       tempArr = this.state.data.sort((a, b) => b.student_id - a.student_id);
       this.setState({ data: tempArr });
     }
-    console.log('tempArr', tempArr);
   };
 
   toggleAlphabet = () => {
-    console.log('toggling alphabet');
     if (this.state.alphabeticalFilter === 0) {
       this.setState({ alphabeticalFilter: -1, marksFilter: 0 });
     } else {
@@ -215,7 +213,6 @@ class Dashboard extends React.Component {
   };
 
   toggleMarks = () => {
-    console.log('toggling marks');
     if (this.state.marksFilter === 0) {
       this.setState({ marksFilter: 1, alphabeticalFilter: 0 });
     } else {
@@ -234,10 +231,10 @@ class Dashboard extends React.Component {
 
     return (
       <React.Fragment>
-        <Loader loaded={this.state.data.length !== 0}>
+        <Loader loaded={!this.props.loading}>
           <React.Fragment>
             <CssBaseline />
-            <AppBar position="static">
+            <AppBar position="fixed">
               <Toolbar className={classes.MuiToolbarRoot}>
                 <div className={classes.search}>
                   <div className={classes.searchIcon}>
@@ -385,6 +382,7 @@ class Dashboard extends React.Component {
 const mapStateToProps = (state) => {
   return {
     data: studentsTotalSelector(state),
+    loading: state.loading,
   };
 };
 
